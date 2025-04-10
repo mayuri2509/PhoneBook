@@ -1,5 +1,13 @@
 import React from "react";
-import { List, ListItem, ListItemText, TextField, Card, CardContent, IconButton } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
+  Card,
+  CardContent,
+  IconButton,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,7 +28,9 @@ class ContactList extends React.Component {
   };
 
   handleChange = (e) => {
-    this.setState({ editData: { ...this.state.editData, [e.target.name]: e.target.value } });
+    this.setState({
+      editData: { ...this.state.editData, [e.target.name]: e.target.value },
+    });
   };
 
   handleSaveEdit = () => {
@@ -36,31 +46,43 @@ class ContactList extends React.Component {
     const { contacts, searchQuery, filterLabel, onDelete } = this.props;
     const { editId, editData } = this.state;
 
-    
     const filteredContacts = contacts
       .filter((contact) =>
         contact.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
-      .filter((contact) => (filterLabel ? contact.label === filterLabel : true));
+      .filter((contact) =>
+        filterLabel ? contact.label === filterLabel : true
+      );
 
     const sortedContacts = [...filteredContacts].sort((a, b) =>
       b.isBookmarked ? 1 : a.isBookmarked ? -1 : 0
     );
 
     return (
-      <List >
+      <List>
         {sortedContacts.length === 0 ? (
-        <p></p>
+          <p>No contacts found.</p>
         ) : (
           sortedContacts.map((contact) => (
-            <Card key={contact.id} sx={{ marginBottom: 2 }}   >
+            <Card key={contact.id} sx={{ marginBottom: 2 }}>
               <CardContent>
                 <ListItem>
                   {editId === contact.id ? (
                     <>
-                      <TextField name="name" value={editData.name} onChange={this.handleChange} />
-                      <TextField name="phone_no" value={editData.phone_no} onChange={this.handleChange} />
-                      <IconButton onClick={this.handleSaveEdit}>
+                      <TextField
+                        name="name"
+                        value={editData.name}
+                        onChange={this.handleChange}
+                      />
+                      <TextField
+                        name="phone_no"
+                        value={editData.phone_no}
+                        onChange={this.handleChange}
+                      />
+                      <IconButton
+                        data-testid={`save-btn-${contact.id}`}
+                        onClick={this.handleSaveEdit}
+                      >
                         <SaveIcon />
                       </IconButton>
                     </>
@@ -71,15 +93,28 @@ class ContactList extends React.Component {
                         secondary={`Phone: ${contact.phone_no} | Label: ${contact.label}`}
                       />
 
-                      <IconButton onClick={() => this.handleToggleBookmark(contact.id)}>
-                        {contact.isBookmarked ? <BookmarkIcon color="primary" /> : <BookmarkBorderIcon />}
+                      <IconButton
+                        data-testid={`bookmark-btn-${contact.id}`}
+                        onClick={() => this.handleToggleBookmark(contact.id)}
+                      >
+                        {contact.isBookmarked ? (
+                          <BookmarkIcon color="primary" />
+                        ) : (
+                          <BookmarkBorderIcon />
+                        )}
                       </IconButton>
 
-                      <IconButton onClick={() => this.handleEditClick(contact)}>
+                      <IconButton
+                        data-testid={`edit-btn-${contact.id}`}
+                        onClick={() => this.handleEditClick(contact)}
+                      >
                         <EditIcon />
                       </IconButton>
 
-                      <IconButton onClick={() => onDelete(contact.id)}>
+                      <IconButton
+                        data-testid={`delete-btn-${contact.id}`}
+                        onClick={() => onDelete(contact.id)}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </>
